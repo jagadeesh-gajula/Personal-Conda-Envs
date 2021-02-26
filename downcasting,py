@@ -1,0 +1,18 @@
+def downcast_dtypes(df):
+    import numpy as np
+    _start = df.memory_usage(deep=True).sum() / 1024 ** 2
+    float_cols = [c for c in df if df[c].dtype == "float64"]
+    int_cols = [ c for c in df if df[c].dtype in ['int64','int32']]
+    df[float_cols] = df[float_cols].astype(np.float16)
+    df[int_cols] = df[int_cols].astype(np.int8)
+    _end = df.memory_usage(deep=True).sum() / 1024 ** 2
+    saved = (_start - _end) / _start * 100
+    print(f"saved {saved: .2f}%")
+    return df
+
+
+
+"""
+This above function will downcast datatyes to save memory. This will avoid memory error while fitting.
+
+"""
